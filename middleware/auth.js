@@ -1,21 +1,26 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
-
-//to decrypt the token
-exports.authenticate = async (req,res,next)=>{
-    try{
+exports.authenticate = async (req, res, next) => {
+    try {
         const token = req.header('Authorization');
-        const userObject = jwt.verify(token,"seiuhn3o4it8y34953n4v5o345");
+
+        if (!token) {
+            return res.status(401).json({ error: "Authorization token not provided." });
+        }
+
+        const userObject = jwt.verify(token, "seiuhn3o4it8y34953n4v5o345");
         const user = await User.findByPk(userObject.userId);
-        console.log('>>>>>user in auth',user);
-        
-            req.user = userObject;
-            console.log('>>>>>>>>>>>>userID',req.User.userId);
-            next();
-        
-    }catch(err){
-        console.log('>>>>>>>>>>>>in catch block of auth.js because we didnt get the user from userObject.userId');
-        return res.status(500).json({error:"something wrong in authenticating"});
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found." });
+        }
+
+        req.user = userObject;
+        console.log('>>>>> req.user in auth line 19: ', req.user);
+        next();
+    } catch (err) {
+        console.error('Error in authentication:', err);
+        return res.status(500).json({ error: "Something went wrong in authenticating." });
     }
 };
