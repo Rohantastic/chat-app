@@ -1,5 +1,3 @@
-    
-
         function parseJwt(token) {
             var base64Url = token.split('.')[1];
             var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -37,32 +35,46 @@
             
             console.log(object);
             const groupResponse = await axios.post('http://localhost:3000/create-group',object);
-
-            if(groupResponse.data.success == true){
-                // document.addEventListener('DOMContentLoaded',async (e)=>{
-                    // e.preventDefault();
-
-                    showGroups();
-                // });
-            }
         }
 
         async function showGroups(){
             const groupGetResponse = await axios.get('http://localhost:3000/get-groups',{ headers: { "Authorization": token } });
 
-                    //console.log(groupGetRepsponse.data.groups);
-                    //console.log("successfully created group");  
-                    
+                    console.log("groupGetResponse: ",groupGetResponse.data.groups);
                     const your_groups_ul = document.getElementById('your-groups-ul');
+
+                    
                     groupGetResponse.data.groups.forEach((element)=>{
                         
                         const newLi = document.createElement('li');
-                        newLi.innerHTML = `${element.groupName}`;
+                        
+                        if (element.UserId === parsedToken.userId) {
+                            const id = element.id;
+                            newLi.innerHTML = `${element.groupName} <button onclick="addMembers(event, '${id}')">+</button>`; //sending group id too
+                        } else {
+                            newLi.innerHTML = `${element.groupName}`;
+                        }
+                        
+                        
+
                         newLi.style.cursor='pointer';
                         your_groups_ul.appendChild(newLi); 
+                        
                         newLi.addEventListener('click',()=>{
+                    
                         });
+                    
                     });
+        }
+
+
+
+       //work on this, think of database structure
+       async function addMembers(event,id){
+            const userEmail = prompt('Enter Email of Users you want to add in group');
+
+            const response = await axios.post('http://localhost:3000/update-member-to-group',object);
+            console.log(userEmail+ "" + id);
         }
 
         const chatButton = document.getElementById('send-button').addEventListener('click',()=>{
@@ -76,4 +88,10 @@
         });
 
 
+
+
+
+        /*
+        only show add button to groups we have created
+        */ 
 showGroups();

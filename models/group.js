@@ -12,10 +12,6 @@ const Group = database.define('Group',{
         type: Sequelize.DataTypes.STRING,
         allowNull : true
     },
-    membersId: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull : true
-    },
 });
 
 

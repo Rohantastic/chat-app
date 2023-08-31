@@ -5,6 +5,7 @@ const groupRoute = require('./routes/group');
 const sequelize = require('./config/database');
 const User = require('./models/user');
 const Message = require('./models/message');
+const UserGroup = require('./models/userGroup');
 const app = express();
 const server = http.createServer(app);
 
@@ -25,8 +26,8 @@ app.use('/', groupRoute);
 User.hasMany(Message);
 Message.belongsTo(User);
 
-User.hasMany(Group);
-Group.belongsTo(User);
+Group.belongsToMany(User,{through:UserGroup});
+User.belongsToMany(Group,{through:UserGroup});
 
 sequelize.sync();
 
