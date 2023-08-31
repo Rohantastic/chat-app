@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Sign Up</title> 
+    <link rel="stylesheet" href="/css/signupPage.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="wrapper">
+        <div class="title"><span>Sign Up</span></div>
+        <form action="#">
+          <div class="row">
+            <i class="fas fa-user"></i>
+            <input type="text" placeholder="Name" name="name" id="name"required>
+          </div>
+          <div class="row">
+            <i class="fas fa-user"></i>
+            <input type="email" placeholder="Email" name="email" id="email" required>
+          </div>
+          <div class="row">
+            <i class="fas fa-user"></i>
+            <input type="text" placeholder="Phone" name="phone" id="phone" required>
+          </div>
+          <div class="row">
+            <i class="fas fa-lock"></i>
+            <input type="password" placeholder="Password" name="password" id="password" required>
+          </div>
+          
+          <div class="row button">
+            <input type="submit" id="button" value="Sign Up">
+          </div>
+          <div class="signup-link">Already a member? <a href="/login">Log in now</a></div>
+        </form>
+      </div>
+      <div class="divv">
+        <h1 id="h11"></h1>
+    </div>
+    </div>
+
+    <script>
+        const form = document.querySelector('form');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+
+            const object = {
+                name: name,
+                email: email,
+                phone: phone,
+                password: password
+            }
+
+            try {
+                const response = await axios.post('http://localhost:3000/signup', object);
+
+                if (response.status === 201) {
+                    const text = document.getElementById('h11');
+                    text.innerHTML = `<p style="color:green;">User Created</p>`;
+
+                } else if (response.data.success===false) {
+                    const text = document.getElementById('h11');
+                    text.innerHTML = `<p style="color:red;">User Already Exists</p>`;
+                }
+            }
+            catch(err){
+                console.log(err);
+            }
+            
+        });
+    </script>
+  </body>
+</html>
